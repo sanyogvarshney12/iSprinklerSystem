@@ -27,9 +27,9 @@ public class SprinklerSystemApplication extends AbstractVerticle {
     @Override
     public void start() {
         System.out.println("iSprinklerSystem Started");
-        /*GpioController gpioController = GpioFactory.getInstance();
+        GpioController gpioController = GpioFactory.getInstance();
         GpioPinDigitalOutput output = gpioController.provisionDigitalOutputPin(RaspiPin.GPIO_15,
-                "Motor", PinState.LOW);*/
+                "Motor", PinState.LOW);
         Router router = Router.router(vertx);
         router.get("/").handler(routingContext -> {
             System.out.println("Welcome to iSprinklerSystem");
@@ -37,19 +37,19 @@ public class SprinklerSystemApplication extends AbstractVerticle {
         });
         router.get("/").handler(routingContext -> {
             System.out.println("iSprinklerSystem Motor Started");
-            //output.setState(PinState.HIGH);
+            output.setState(PinState.HIGH);
             routingContext.response().end("iSprinklerSystem Motor Started");
         });
         router.get("/turnoff").handler(routingContext -> {
             System.out.println("iSprinklerSystem Motor stopped");
-            //output.setState(PinState.LOW);
+            output.setState(PinState.LOW);
             routingContext.response().end("iSprinklerSystem Motor stopped");
         });
         router.get("/timer/:time").handler(routingContext -> {
             Timer timer = new Timer();
             System.out.println("iSprinklerSystem Motor started for "+routingContext.pathParam("time"));
             int i = Integer.parseInt(routingContext.pathParam("time"));
-            SprinklerTimerTask task = new SprinklerTimerTask(i, timer);
+            SprinklerTimerTask task = new SprinklerTimerTask(i, timer, output);
             task.run();
             routingContext.response().end("iSprinklerSystem Motor stopped");
         });
@@ -72,7 +72,7 @@ public class SprinklerSystemApplication extends AbstractVerticle {
                     System.out.println("Turning on motor in Schedule");
                     Timer timer = new Timer();
                     int i = Integer.parseInt(routingContext.pathParam("time"));
-                    SprinklerTimerTask task = new SprinklerTimerTask(i, timer);
+                    SprinklerTimerTask task = new SprinklerTimerTask(i, timer, output);
                     task.run();
                 }
             }, initialDelay, TimeUnit.DAYS.toSeconds(1), TimeUnit.SECONDS);
