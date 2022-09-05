@@ -61,6 +61,7 @@
                             <transformers>
                                 <transformer
                                     implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>org.howathon.sprinkler.SprinklerSystemApplication</mainClass>
                                 </transformer>
                             </transformers>
                             <artifactSet />
